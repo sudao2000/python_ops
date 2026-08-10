@@ -9,17 +9,17 @@ torch.manual_seed(0)
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1' # 引入blocking机制，方便调试哪个算子出了问题
 
 # model_name = "/home/kurt/work/model/Qwen2.5-0.5B"
-model_name = "/media/kurt/mac/model/qwen2.5-14b/"
+model_name = "/home/kurt/work/model/qwen2.5-14b"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    _attn_implementation='eager',
+    _attn_implementation='sdpa',
     torch_dtype=torch.bfloat16
 )
 model = model.to('cuda')
 
-text = "I love this product"
+text = "I love this product because it is a great product. It is very good."
 inputs = tokenizer(text, return_tensors="pt").to('cuda')
 with torch.no_grad():
     outputs = model.generate(

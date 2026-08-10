@@ -209,6 +209,7 @@ def register_fallback_ops():
         'not': True,
         '__invert__': True,
         'randn': True,
+        'scaled_dot_product_attention': True,
     }
     missing_ops = []
     for func_name, enabled in torch_functions.items():
