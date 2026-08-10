@@ -226,20 +226,20 @@ def register_fallback_ops():
             found = True
         
         # Check in specialized submodules if not found in top-level
-        if not found:
-            special_modules = [
-                (torch.nn.functional, 'nn.functional'),
-                (torch._C._nn, '_C._nn'), 
-                (torch._C, '_C')
-            ]
-            for module, module_name in special_modules:
-                if hasattr(module, func_name):
-                    origin_func = getattr(module, func_name)
-                    # We wrap it as torch.{func_name} for fallback logging purposes
-                    # or keep module_name in log if preferred
-                    ops_dict[f'{module_name}.{func_name}'] = torch_func_wrapper(origin_func, f'{module_name}.{func_name}')
-                    found = True
-                    break
+
+        special_modules = [
+            (torch.nn.functional, 'nn.functional'),
+            (torch._C._nn, '_C._nn'), 
+            (torch._C, '_C')
+        ]
+        for module, module_name in special_modules:
+            if hasattr(module, func_name):
+                origin_func = getattr(module, func_name)
+                # We wrap it as torch.{func_name} for fallback logging purposes
+                # or keep module_name in log if preferred
+                ops_dict[f'{module_name}.{func_name}'] = torch_func_wrapper(origin_func, f'{module_name}.{func_name}')
+                found = True
+                break
 
         if not found:
             missing_ops.append(func_name)
